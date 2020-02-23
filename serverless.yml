@@ -1,4 +1,4 @@
-service: fromwaydowntown-api
+service: feed-subscribe-api
 
 # Create an optimized package for our functions
 package:
