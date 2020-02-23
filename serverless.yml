@@ -122,7 +122,7 @@ functions:
     handler: graphql.query
     events:
       - http:
-          path: query
+          path: graphql
           method: get
           cors: true
 # Create our resources with separate CloudFormation templates
