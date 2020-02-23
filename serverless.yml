@@ -118,6 +118,13 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+  query:
+    handler: graphql.query
+    events:
+      - http:
+          path: query
+          method: get
+          cors: true
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
