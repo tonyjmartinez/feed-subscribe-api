@@ -124,7 +124,6 @@ functions:
       - http:
           path: query
           method: get
-          cors: true
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
