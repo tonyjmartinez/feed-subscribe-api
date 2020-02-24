@@ -127,6 +127,7 @@ functions:
       - http:
           path: query
           method: get
+          cors: true
   graphql:
     handler: getComments.graphqlHandler
     events:
