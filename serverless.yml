@@ -129,7 +129,7 @@ functions:
           path: query
           method: get
   graphql:
-    handler: handler.graphqlHandler
+    handler: handler.graphql
     events:
       - http:
           path: graphql
