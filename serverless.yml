@@ -122,13 +122,13 @@ functions:
           cors: true
           authorizer: aws_iam
   query:
-    handler: getComments.query
+    handler: graphql.query
     events:
       - http:
           path: query
           method: get
   graphql:
-    handler: graphql.graphqlHandler
+    handler: getComments.graphqlHandler
     events:
       - http:
           path: graphql
