@@ -1,31 +1,31 @@
 Resources:
-CommentsTable:
-  Type: AWS::DynamoDB::Table
-  Properties:
-    TableName: ${self:custom.tableName}
-    AttributeDefinitions:
-      - AttributeName: userId
-        AttributeType: S
-      - AttributeName: commentId
-        AttributeType: S
-    KeySchema:
-      - AttributeName: userId
-        KeyType: HASH
-      - AttributeName: commentId
-        KeyType: RANGE
-    # Set the capacity to auto-scale
-    BillingMode: PAY_PER_REQUEST
-NicknamesTable:
-  Type: "AWS::DynamoDB::Table"
-  Properties:
-    AttributeDefinitions:
-      - AttributeName: firstName
-        AttributeType: S
-    KeySchema:
-      - AttributeName: firstName
-        KeyType: HASH
-    ProvisionedThroughput:
-      ReadCapacityUnits: 1
-      WriteCapacityUnits: 1
-    TableName: ${self:custom.tableName}
-    BillingMode: PAY_PER_REQUEST
+  CommentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.tableName}
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: commentId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: commentId
+          KeyType: RANGE
+      # Set the capacity to auto-scale
+      BillingMode: PAY_PER_REQUEST
+  NicknamesTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: firstName
+          AttributeType: S
+      KeySchema:
+        - AttributeName: firstName
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: ${self:custom.tableName}
+      BillingMode: PAY_PER_REQUEST
