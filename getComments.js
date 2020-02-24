@@ -19,17 +19,10 @@ const resolvers = {
     hello: () => "Hello world!",
     comments: async () => {
       const params = {
-        TableName: process.env.graphQLTable,
-        // 'Key' defines the partition key and sort key of the item to be retrieved
-        // - 'userId': Identity Pool identity id of the authenticated user
-        // - 'noteId': path parameter
-        Key: {
-          userId: event.requestContext.identity.cognitoIdentityId,
-          commentId: event.pathParameters.id
-        }
+        TableName: process.env.graphQLTable
       };
       try {
-        const result = await dynamoDbLib.call("get", params);
+        const result = await dynamoDbLib.call("query", params);
         if (result.Item) {
           // Return the retrieved item
           return success(result.Item);
