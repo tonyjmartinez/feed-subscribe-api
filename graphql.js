@@ -1,96 +1,19 @@
-/* handler.js */
-const {
-  graphql,
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLNonNull
-} = require("graphql");
-const AWS = require("aws-sdk");
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-import { promisify } from "./util";
+import { ApolloServer, gql } from "apollo-server-lambda";
 
-// replace previous implementation of getGreeting
-const getGreeting = firstName =>
-  promisify(callback =>
-    dynamoDb.get(
-      {
-        TableName: process.env.graphQLTable,
-        Key: { firstName }
-      },
-      callback
-    )
-  )
-    .then(result => {
-      if (!result.Item) {
-        return firstName;
-      }
-      return result.Item.nickname;
-    })
-    .then(name => `Hello, ${name}.`);
+// Construct a schema, using GraphQL schema language
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
 
-// add method for updates
-const changeNickname = (firstName, nickname) =>
-  promisify(callback =>
-    dynamoDb.update(
-      {
-        TableName: process.env.graphQLTable,
-        Key: { firstName },
-        UpdateExpression: "SET nickname = :nickname",
-        ExpressionAttributeValues: {
-          ":nickname": nickname
-        }
-      },
-      callback
-    )
-  ).then(() => nickname);
+// Provide resolver functions for your schema fields
+const resolvers = {
+  Query: {
+    hello: () => "Hello world!"
+  }
+};
 
-// alter schema
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: "RootQueryType", // an arbitrary name
-    fields: {
-      // the query has a field called 'greeting'
-      greeting: {
-        // we need to know the user's name to greet them
-        args: {
-          firstName: {
-            name: "firstName",
-            type: new GraphQLNonNull(GraphQLString)
-          }
-        },
-        // the greeting message is a string
-        type: GraphQLString,
-        // resolve to a greeting message
-        resolve: (parent, args) => getGreeting(args.firstName)
-      }
-    }
-  }),
-  mutation: new GraphQLObjectType({
-    name: "RootMutationType", // an arbitrary name
-    fields: {
-      changeNickname: {
-        args: {
-          firstName: {
-            name: "firstName",
-            type: new GraphQLNonNull(GraphQLString)
-          },
-          nickname: {
-            name: "nickname",
-            type: new GraphQLNonNull(GraphQLString)
-          }
-        },
-        type: GraphQLString,
-        resolve: (parent, args) => changeNickname(args.firstName, args.nickname)
-      }
-    }
-  })
-});
+const server = new ApolloServer({ typeDefs, resolvers });
 
-// We want to make a GET request with ?query=<graphql query>
-// The event properties are specific to AWS. Other providers will differ.
-export const query = (event, context, callback) =>
-  graphql(schema, event.queryStringParameters.query).then(
-    result => callback(null, { statusCode: 200, body: JSON.stringify(result) }),
-    err => callback(err)
-  );
+exports.graphqlHandler = server.createHandler();
