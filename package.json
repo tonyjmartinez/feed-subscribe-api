@@ -17,9 +17,12 @@
     "jest": "^25.1.0",
     "serverless-bundle": "^1.2.5",
     "serverless-dotenv-plugin": "^2.1.1",
-    "serverless-offline": "^5.3.3"
+    "serverless-offline": "^5.3.3",
+    "serverless-plugin-typescript": "^1.1.9",
+    "typescript": "^3.8.2"
   },
   "dependencies": {
+    "apollo-server-lambda": "^2.10.1",
     "graphql": "^14.6.0",
     "stripe": "^8.7.0",
     "uuid": "^3.4.0"

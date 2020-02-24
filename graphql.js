@@ -8,17 +8,7 @@ const {
 } = require("graphql");
 const AWS = require("aws-sdk");
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-const promisify = foo =>
-  new Promise((resolve, reject) => {
-    foo((error, result) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(result);
-      }
-    });
-  });
+import { promisify } from "./util";
 
 // replace previous implementation of getGreeting
 const getGreeting = firstName =>
