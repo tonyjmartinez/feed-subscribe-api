@@ -43,6 +43,7 @@ provider:
       # the specific table for the stage
       Resource:
         - "Fn::GetAtt": [CommentsTable, Arn]
+        - "Fn::GetAtt": [NicknamesTable, Arn]
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js

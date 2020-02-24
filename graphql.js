@@ -6,28 +6,67 @@ const {
   GraphQLString,
   GraphQLNonNull
 } = require("graphql");
+const AWS = require("aws-sdk");
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-// This method just inserts the user's first name into the greeting message.
-const getGreeting = firstName => `Hello, ${firstName}.`;
+// replace previous implementation of getGreeting
+const getGreeting = firstName =>
+  promisify(callback =>
+    dynamoDb.get(
+      {
+        TableName: process.env.DYNAMODB_TABLE,
+        Key: { firstName }
+      },
+      callback
+    )
+  )
+    .then(result => {
+      if (!result.Item) {
+        return firstName;
+      }
+      return result.Item.nickname;
+    })
+    .then(name => `Hello, ${name}.`);
 
-// Here we declare the schema and resolvers for the query
+// add method for updates
+const changeNickname = (firstName, nickname) =>
+  promisify(callback =>
+    dynamoDb.update(
+      {
+        TableName: process.env.DYNAMODB_TABLE,
+        Key: { firstName },
+        UpdateExpression: "SET nickname = :nickname",
+        ExpressionAttributeValues: {
+          ":nickname": nickname
+        }
+      },
+      callback
+    )
+  ).then(() => nickname);
+
+// alter schema
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
-    name: "RootQueryType", // an arbitrary name
+    /* unchanged */
+  }),
+  mutation: new GraphQLObjectType({
+    name: "RootMutationType", // an arbitrary name
     fields: {
-      // the query has a field called 'greeting'
-      greeting: {
-        // we need to know the user's name to greet them
+      changeNickname: {
         args: {
+          // we need the user's first name as well as a preferred nickname
           firstName: {
             name: "firstName",
             type: new GraphQLNonNull(GraphQLString)
+          },
+          nickname: {
+            name: "nickname",
+            type: new GraphQLNonNull(GraphQLString)
           }
         },
-        // the greeting message is a string
         type: GraphQLString,
-        // resolve to a greeting message
-        resolve: (parent, args) => getGreeting(args.firstName)
+        // update the nickname
+        resolve: (parent, args) => changeNickname(args.firstName, args.nickname)
       }
     }
   })
