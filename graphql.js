@@ -25,7 +25,7 @@ const getGreeting = firstName =>
   promisify(callback =>
     dynamoDb.get(
       {
-        TableName: process.env.tableName,
+        TableName: process.env.graphQLTable,
         Key: { firstName }
       },
       callback
@@ -44,7 +44,7 @@ const changeNickname = (firstName, nickname) =>
   promisify(callback =>
     dynamoDb.update(
       {
-        TableName: process.env.tableName,
+        TableName: process.env.graphQLTable,
         Key: { firstName },
         UpdateExpression: "SET nickname = :nickname",
         ExpressionAttributeValues: {
