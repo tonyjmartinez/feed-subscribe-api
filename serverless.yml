@@ -26,6 +26,7 @@ provider:
   # under process.env.
   environment:
     tableName: ${self:custom.tableName}
+    graphQLTable: ${self:custom.graphQLTable}
     stripeSecretKey: ${env:STRIPE_SECRET_KEY}
 
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
