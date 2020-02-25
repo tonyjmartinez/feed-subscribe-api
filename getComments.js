@@ -18,22 +18,24 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: () => "Hello world!",
-    comments: async () => {
+    comments: () => {
       const params = {
         TableName: process.env.graphQLTable
       };
-      try {
-        const result = await dynamoDbLib.call("query", params);
-        if (result.Items) {
-          // Return the retrieved item
-          return success(result.Items);
-        } else {
-          return failure({ status: false, error: "Item not found." });
+      return new Promise((resolve, reject) => {
+        try {
+          dynamoDbLib
+            .call("query", params)
+            .then(data => resolve(data.items))
+            .catch(reject);
+          // const result = {
+          //   Items: [{ userId: "tony", commentId: "comment" }]
+          // };
+        } catch (e) {
+          console.log(e);
+          reject(e);
         }
-      } catch (e) {
-        console.log(e);
-        return failure({ status: false });
-      }
+      });
     }
   }
 };
