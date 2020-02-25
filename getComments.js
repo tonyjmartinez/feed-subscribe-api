@@ -4,7 +4,7 @@ const { ApolloServer, gql } = require("apollo-server-lambda");
 // import { success, failure } from "./libs/response-lib";
 // const AWS = require("aws-sdk"); // eslint-disable-line import/no-extraneous-dependencies
 // const dynamoDb = new AWS.DynamoDB.DocumentClient();
-import * as db from "./libs/dynamo-actions";
+import * as db from "./libs/dynamo";
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
   type Comment {
