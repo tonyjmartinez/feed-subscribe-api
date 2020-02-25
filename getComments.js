@@ -23,15 +23,20 @@ const resolvers = {
       const params = {
         TableName: process.env.graphQLTable
       };
-      try {
-        return dynamoDbLib.call("scan", params);
-        // const result = {
-        //   Items: [{ userId: "tony", commentId: "comment" }]
-        // };
-      } catch (e) {
-        console.log(e);
-        return e;
-      }
+      return new Promise((resolve, reject) => {
+        try {
+          dynamoDbLib
+            .call("query", params)
+            .then(data => resolve(data.items))
+            .catch(e => resolve([{ userId: e.toString(), content: e }]));
+          // const result = {
+          //   Items: [{ userId: "tony", commentId: "comment" }]
+          // };
+        } catch (e) {
+          console.log(e);
+          reject(e);
+        }
+      });
     }
   }
 };
