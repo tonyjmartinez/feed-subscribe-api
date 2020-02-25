@@ -28,6 +28,7 @@ const resolvers = {
         return dynamoDb.scan(params, function(err, data) {
           if (err) {
             console.error(err);
+            return [{ content: err.toString() }];
           } else {
             console.log(data.Items);
             return data.Items;
