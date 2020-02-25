@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server-lambda");
 import * as dynamoDbLib from "./libs/dynamodb-lib";
-import { success, failure } from "./libs/response-lib";
+// import { success, failure } from "./libs/response-lib";
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
