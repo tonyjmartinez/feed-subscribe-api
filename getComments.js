@@ -1,10 +1,9 @@
 const { ApolloServer, gql } = require("apollo-server-lambda");
 // import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { promisify } from "./util";
-const AWS = require("aws-sdk");
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
 // import { success, failure } from "./libs/response-lib";
-
+const AWS = require("aws-sdk"); // eslint-disable-line import/no-extraneous-dependencies
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
   type Comment {
@@ -24,10 +23,28 @@ const resolvers = {
     hello: () => "Hello world!",
     comments: () => {
       const params = {
-        TableName: process.env.graphQLTable
+        TableName: process.env.tableName
       };
       try {
-        return promisify(callback => dynamoDb.scan(params, callback));
+        return promisify(callback => {
+          dynamoDb.scan(params, (error, result) => {
+            if (error) {
+              console.error(error);
+              callback(null, {
+                statusCode: error.statusCode || 501,
+                headers: { "Content-Type": "text/plain" },
+                body: error.toString()
+              });
+              return;
+            }
+
+            const response = {
+              statusCode: 200,
+              body: JSON.stringify(result.Items)
+            };
+            callback(null, response);
+          });
+        });
 
         // dynamoDbLib
         //   .call("query", params)
@@ -37,8 +54,7 @@ const resolvers = {
         //   Items: [{ userId: "tony", commentId: "comment" }]
         // };
       } catch (e) {
-        console.log(e);
-        return e;
+        return [e.toString()];
       }
     }
   }
