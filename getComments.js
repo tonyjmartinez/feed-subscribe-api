@@ -7,6 +7,7 @@ const typeDefs = gql`
   type Comment {
     userId: String
     commentId: String
+    content: String
   }
   type Query {
     hello: String
@@ -25,7 +26,7 @@ const resolvers = {
       return new Promise((resolve, reject) => {
         try {
           dynamoDbLib
-            .call("query", params)
+            .call("scan", params)
             .then(data => resolve(data.items))
             .catch(reject);
           // const result = {
