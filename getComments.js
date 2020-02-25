@@ -4,12 +4,13 @@ import { success, failure } from "./libs/response-lib";
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-  type Comments {
+  type Comment {
     userId: String
     commentId: String
+  }
+  type Query {
+    hello: String
+    comments: [Comment]
   }
 `;
 
@@ -23,9 +24,9 @@ const resolvers = {
       };
       try {
         const result = await dynamoDbLib.call("query", params);
-        if (result.Item) {
+        if (result.Items) {
           // Return the retrieved item
-          return success(result.Item);
+          return success(result.Items);
         } else {
           return failure({ status: false, error: "Item not found." });
         }
