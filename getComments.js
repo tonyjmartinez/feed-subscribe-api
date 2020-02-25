@@ -2,8 +2,9 @@ const { ApolloServer, gql } = require("apollo-server-lambda");
 // import * as dynamoDbLib from "./libs/dynamodb-lib";
 // import { promisify } from "./util";
 // import { success, failure } from "./libs/response-lib";
-const AWS = require("aws-sdk"); // eslint-disable-line import/no-extraneous-dependencies
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+// const AWS = require("aws-sdk"); // eslint-disable-line import/no-extraneous-dependencies
+// const dynamoDb = new AWS.DynamoDB.DocumentClient();
+import * as db from "./libs/dynamo-actions";
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
   type Comment {
@@ -25,15 +26,8 @@ const resolvers = {
         AttributesToGet: ["content"]
       };
       try {
-        return dynamoDb.scan(params, function(err, data) {
-          if (err) {
-            console.error(err);
-            return [{ content: err.toString() }];
-          } else {
-            console.log(data.Items);
-            return data.Items;
-          }
-        });
+        return db.scan(params);
+
         // return [{ userId: "tony", commentId: "comment" }];
 
         // dynamoDbLib
