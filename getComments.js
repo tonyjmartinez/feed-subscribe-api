@@ -22,8 +22,7 @@ const resolvers = {
     hello: () => "Hello world!",
     comments: () => {
       const params = {
-        TableName: process.env.tableName,
-        AttributesToGet: ["content"]
+        TableName: process.env.tableName
       };
       try {
         return db.scan(params);
