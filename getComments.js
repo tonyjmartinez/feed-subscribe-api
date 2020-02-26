@@ -9,6 +9,8 @@ import * as db from "./libs/dynamo";
 const typeDefs = gql`
   type Comment {
     content: String
+    userId: String
+    commentId: String
   }
   type Query {
     hello: String
