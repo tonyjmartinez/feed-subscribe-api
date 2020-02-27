@@ -135,12 +135,10 @@ functions:
           path: graphql
           method: post
           cors: true
-          authorizer: aws_iam
       - http:
           path: graphql
           method: get
           cors: true
-          authorizer: aws_iam
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
