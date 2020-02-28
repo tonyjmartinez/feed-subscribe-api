@@ -135,7 +135,11 @@ functions:
           path: graphql
           method: post
           cors: true
-          authorizer: aws_iam
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            type: token
       - http:
           path: graphql
           method: get
