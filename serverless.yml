@@ -135,16 +135,10 @@ functions:
           path: graphql
           method: post
           cors: true
-          authorizer:
-            name: authorizerFunc
-            resultTtlInSeconds: 0
-            identitySource: method.request.header.Authorization
-            type: token
       - http:
           path: graphql
           method: get
           cors: true
-          authorizer: aws_iam
 
 # Create our resources with separate CloudFormation templates
 resources:
